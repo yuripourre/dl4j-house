@@ -50,12 +50,12 @@ import java.util.Random;
 // https://github.com/deeplearning4j/dl4j-examples/blob/master/dl4j-examples/src/main/java/org/deeplearning4j/examples/convolution/AnimalsClassification.java
 public class ImagePipelineExample {
 
-    private static final NeuralNetwork NEURAL_NETWORK = NeuralNetwork.CUSTOM;
-    //private static final NeuralNetwork NEURAL_NETWORK = NeuralNetwork.ALEXNET;
+    //private static final NeuralNetwork NEURAL_NETWORK = NeuralNetwork.CUSTOM;
+    private static final NeuralNetwork NEURAL_NETWORK = NeuralNetwork.ALEXNET;
     //private static final NeuralNetwork NEURAL_NETWORK = NeuralNetwork.LENET;
 
-    private static final Train TRAIN = Train.FAST;
-    //private static final Train TRAIN = Train.FULL;
+    //private static Train TRAIN = Train.FAST;
+    private static Train TRAIN = Train.FULL;
 
     private static final boolean SAVE = false;
 
@@ -157,9 +157,11 @@ public class ImagePipelineExample {
     private static void trainModel(InputSplit trainData, ImageRecordReader recordReader, DataNormalization scaler, MultiLayerNetwork network) throws IOException {
         switch (TRAIN) {
             case FAST:
+                System.out.println("Using fast training");
                 fastTrainModel(trainData, recordReader, scaler, network);
                 break;
             case FULL:
+                System.out.println("Using full training");
                 fullTrainModel(trainData, recordReader, scaler, network);
                 break;
         }
@@ -230,6 +232,8 @@ public class ImagePipelineExample {
                 return lenetModel();
             case CUSTOM:
             default:
+                // Custom networks works with fast train only
+                TRAIN = Train.FAST;
                 return customModel();
         }
     }
